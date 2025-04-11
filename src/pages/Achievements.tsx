@@ -1,360 +1,239 @@
-
 import React, { useState, useEffect } from 'react';
-import { Trophy, Award, Shield, Target, Flag, Medal, Star, ExternalLink } from 'lucide-react';
+import { Trophy, Award, Certificate, Medal, Star, Shield, Lock as LockIcon } from 'lucide-react';
 
 interface Achievement {
-  id: number;
   title: string;
   description: string;
   date: string;
-  type: 'ctf' | 'certification' | 'award' | 'recognition';
+  category: string;
   icon: React.ReactNode;
-  rarity: 'common' | 'uncommon' | 'rare' | 'legendary';
-  unlocked: boolean;
+  isLocked?: boolean;
 }
 
 const Achievements = () => {
   const [achievements, setAchievements] = useState<Achievement[]>([]);
-  const [activeFilter, setActiveFilter] = useState<string>('All');
-  const [showUnlocked, setShowUnlocked] = useState<boolean>(true);
-  const [showingDetails, setShowingDetails] = useState<number | null>(null);
-  
-  const achievementsData: Achievement[] = [
-    {
-      id: 1,
-      title: "DEF CON CTF Finalist",
-      description: "Reached the finals of DEF CON CTF, one of the world's most prestigious hacking competitions, competing against elite international teams.",
-      date: "2022",
-      type: "ctf",
-      icon: <Flag size={20} />,
-      rarity: "legendary",
-      unlocked: true
-    },
-    {
-      id: 2,
-      title: "SANS NetWars Champion",
-      description: "First place in SANS NetWars Tournament of Champions, demonstrating exceptional skills in defensive and offensive security challenges.",
-      date: "2021",
-      type: "ctf",
-      icon: <Trophy size={20} />,
-      rarity: "rare",
-      unlocked: true
-    },
-    {
-      id: 3,
-      title: "OSCP Certification",
-      description: "Obtained Offensive Security Certified Professional (OSCP) certification with perfect lab scores, demonstrating advanced penetration testing skills.",
-      date: "2020",
-      type: "certification",
-      icon: <Award size={20} />,
-      rarity: "uncommon",
-      unlocked: true
-    },
-    {
-      id: 4,
-      title: "CISSP Certification",
-      description: "Certified Information Systems Security Professional, recognizing expertise across all security domains.",
-      date: "2021",
-      type: "certification",
-      icon: <Shield size={20} />,
-      rarity: "uncommon",
-      unlocked: true
-    },
-    {
-      id: 5,
-      title: "Zero-Day Vulnerability Discovery",
-      description: "Discovered and responsibly disclosed a critical zero-day vulnerability in a major enterprise application, which was subsequently patched.",
-      date: "2022",
-      type: "recognition",
-      icon: <Target size={20} />,
-      rarity: "rare",
-      unlocked: true
-    },
-    {
-      id: 6,
-      title: "National Cybersecurity Excellence Award",
-      description: "Received industry recognition for contributions to national cybersecurity standards and practices.",
-      date: "2022",
-      type: "award",
-      icon: <Medal size={20} />,
-      rarity: "legendary",
-      unlocked: true
-    },
-    {
-      id: 7,
-      title: "Published Security Researcher",
-      description: "Published research on advanced persistent threats in a leading cybersecurity journal, establishing expertise in APT detection and mitigation.",
-      date: "2021",
-      type: "recognition",
-      icon: <Star size={20} />,
-      rarity: "rare",
-      unlocked: true
-    },
-    {
-      id: 8,
-      title: "HackTheBox Hall of Fame",
-      description: "Recognized in the HackTheBox Hall of Fame for being among the first to solve multiple challenging machines.",
-      date: "2020",
-      type: "ctf",
-      icon: <Trophy size={20} />,
-      rarity: "uncommon",
-      unlocked: true
-    },
-    {
-      id: 9,
-      title: "Bug Bounty Elite",
-      description: "Reached elite status in major bug bounty programs by discovering critical vulnerabilities in enterprise applications.",
-      date: "2023",
-      type: "recognition",
-      icon: <Target size={20} />,
-      rarity: "rare",
-      unlocked: true
-    },
-    {
-      id: 10,
-      title: "Cloud Security Master",
-      description: "Classified achievement in cloud security mastery. Details restricted.",
-      date: "2023",
-      type: "certification",
-      icon: <Shield size={20} />,
-      rarity: "legendary",
-      unlocked: false
-    }
-  ];
-  
-  const filters = ['All', 'CTF Competitions', 'Certifications', 'Awards', 'Recognition'];
-  
-  const filterMap = {
-    'All': () => true,
-    'CTF Competitions': (item: Achievement) => item.type === 'ctf',
-    'Certifications': (item: Achievement) => item.type === 'certification',
-    'Awards': (item: Achievement) => item.type === 'award',
-    'Recognition': (item: Achievement) => item.type === 'recognition',
-  };
+  const [visibleAchievements, setVisibleAchievements] = useState<Achievement[]>([]);
+  const [activeCategory, setActiveCategory] = useState<string | null>(null);
 
-  const rarityColors = {
-    common: 'border-gray-400 bg-gray-800/50',
-    uncommon: 'border-cyber-blue bg-cyber-blue/10',
-    rare: 'border-cyber-purple bg-cyber-purple/10',
-    legendary: 'border-cyber-red bg-cyber-red/10',
-  };
-  
-  const rarityGlow = {
-    common: '',
-    uncommon: 'shadow-[0_0_10px_rgba(14,165,233,0.3)]',
-    rare: 'shadow-[0_0_15px_rgba(139,92,246,0.4)]',
-    legendary: 'shadow-[0_0_20px_rgba(234,56,76,0.5)]',
-  };
-  
-  const rarityTextColors = {
-    common: 'text-gray-400',
-    uncommon: 'text-cyber-blue',
-    rare: 'text-cyber-purple',
-    legendary: 'text-cyber-red',
-  };
+  const allAchievements: Achievement[] = [
+    {
+      title: 'Certified Ethical Hacker (CEH)',
+      description: 'Awarded for demonstrating proficiency in ethical hacking techniques and methodologies.',
+      date: '2022-08-15',
+      category: 'Certifications',
+      icon: <Certificate size={24} />,
+    },
+    {
+      title: 'Offensive Security Certified Professional (OSCP)',
+      description: 'Achieved for successfully completing the rigorous penetration testing certification.',
+      date: '2023-03-20',
+      category: 'Certifications',
+      icon: <Certificate size={24} />,
+    },
+    {
+      title: 'Capture the Flag (CTF) Champion',
+      description: 'Won first place in the annual cybersecurity Capture the Flag competition.',
+      date: '2023-11-01',
+      category: 'Competitions',
+      icon: <Trophy size={24} />,
+    },
+    {
+      title: 'Vulnerability Disclosure Program Recognition',
+      description: 'Recognized for discovering and responsibly disclosing a critical vulnerability in a widely-used software application.',
+      date: '2023-06-10',
+      category: 'Recognition',
+      icon: <Award size={24} />,
+    },
+    {
+      title: 'Red Team Operations Excellence Award',
+      description: 'Awarded for outstanding performance and contributions to red team operations.',
+      date: '2024-01-25',
+      category: 'Awards',
+      icon: <Medal size={24} />,
+    },
+    {
+      title: 'Cybersecurity Innovation Challenge Winner',
+      description: 'Won the Cybersecurity Innovation Challenge for developing a novel threat detection system.',
+      date: '2024-04-05',
+      category: 'Competitions',
+      icon: <Trophy size={24} />,
+    },
+    {
+      title: '5-Star Hacker Ranking',
+      description: 'Achieved a 5-star ranking on a leading ethical hacking platform.',
+      date: '2023-09-18',
+      category: 'Recognition',
+      icon: <Star size={24} />,
+    },
+    {
+      title: 'Advanced Penetration Testing Certification',
+      description: 'Completed advanced training and certification in penetration testing methodologies.',
+      date: '2024-02-12',
+      category: 'Certifications',
+      icon: <Certificate size={24} />,
+      isLocked: true,
+    },
+    {
+      title: 'Critical Infrastructure Security Award',
+      description: 'Awarded for exceptional contributions to securing critical infrastructure systems.',
+      date: '2024-05-22',
+      category: 'Awards',
+      icon: <Medal size={24} />,
+      isLocked: true,
+    },
+    {
+      title: 'Global Cybersecurity Challenge Finalist',
+      description: 'Reached the finals of the Global Cybersecurity Challenge, competing against top cybersecurity professionals worldwide.',
+      date: '2023-12-08',
+      category: 'Competitions',
+      icon: <Trophy size={24} />,
+      isLocked: true,
+    },
+    {
+      title: 'Security Research Grant Recipient',
+      description: 'Received a research grant to study and develop innovative solutions for emerging cybersecurity threats.',
+      date: '2024-03-01',
+      category: 'Awards',
+      icon: <Award size={24} />,
+      isLocked: true,
+    },
+    {
+      title: 'Elite Hacker Status',
+      description: 'Achieved elite hacker status on a prominent cybersecurity platform, recognized for exceptional skills and contributions.',
+      date: '2024-06-15',
+      category: 'Recognition',
+      icon: <Star size={24} />,
+      isLocked: true,
+    },
+  ];
+
+  const categories = ['All', ...new Set(allAchievements.map(achievement => achievement.category))];
 
   useEffect(() => {
-    // Filter achievements based on current filter and locked/unlocked state
-    const filtered = achievementsData
-      .filter((filterMap as any)[activeFilter])
-      .filter(a => showUnlocked || !a.unlocked);
-    
-    // Reset visible achievements
-    setAchievements([]);
-    
-    // Add achievements with delay for animation
-    filtered.forEach((achievement, index) => {
+    setAchievements(allAchievements);
+  }, []);
+
+  useEffect(() => {
+    const filteredAchievements = activeCategory && activeCategory !== 'All'
+      ? achievements.filter(achievement => achievement.category === activeCategory)
+      : achievements;
+
+    setVisibleAchievements([]);
+
+    filteredAchievements.forEach((achievement, index) => {
       setTimeout(() => {
-        setAchievements(prev => [...prev, achievement]);
+        setVisibleAchievements(prev => [...prev, achievement]);
         if (window.playSound && index % 3 === 0) window.playSound('notification');
-      }, 100 * index);
+      }, 150 * index);
     });
-  }, [activeFilter, showUnlocked]);
+  }, [activeCategory, achievements]);
+
+  const formatDate = (dateString: string): string => {
+    const date = new Date(dateString);
+    const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
+    return date.toLocaleDateString(undefined, options);
+  };
 
   return (
     <div className="min-h-screen p-6 md:p-8">
       <div className="max-w-5xl mx-auto">
         <div className="mb-8">
           <h1 className="text-3xl font-futura font-bold flex items-center">
-            <Trophy className="mr-3 text-cyber-green" size={28} />
-            <span className="text-cyber-light">ACHIEVEMENTS & ACCOLADES</span>
+            <Trophy className="mr-3 text-cyber-blue" size={28} />
+            <span className="text-cyber-light">ACHIEVEMENTS & RECOGNITION</span>
           </h1>
           <p className="text-cyber-light/70 mt-2">
-            Professional achievements, competition victories, and industry recognition in cybersecurity.
+            A comprehensive record of accomplishments, certifications, and recognitions in the field of cybersecurity.
           </p>
         </div>
 
-        {/* Filter Controls */}
-        <div className="flex flex-col md:flex-row md:items-center justify-between mb-8">
-          <div className="flex space-x-2 overflow-x-auto pb-2 mb-4 md:mb-0">
-            {filters.map(filter => (
+        {/* Category Filters */}
+        <div className="mb-8 overflow-x-auto pb-2">
+          <div className="flex space-x-2">
+            {categories.map(category => (
               <button
-                key={filter}
+                key={category}
                 className={`px-4 py-2 whitespace-nowrap ${
-                  activeFilter === filter 
-                    ? 'bg-cyber-green text-cyber-dark font-bold' 
-                    : 'border border-cyber-green/30 hover:border-cyber-green/60 text-cyber-light/70'
+                  activeCategory === category
+                    ? 'bg-cyber-purple text-cyber-light'
+                    : 'bg-cyber-dark/70 text-cyber-light/70 border border-cyber-purple/30 hover:border-cyber-purple/60'
                 }`}
                 onClick={() => {
-                  setActiveFilter(filter);
                   window.playSound?.('click');
+                  setActiveCategory(category);
                 }}
                 onMouseEnter={() => window.playSound?.('hover')}
               >
-                {filter}
+                {category}
               </button>
             ))}
           </div>
-          
-          <div>
-            <button
-              className="flex items-center text-sm text-cyber-light/80 hover:text-cyber-light"
-              onClick={() => {
-                setShowUnlocked(!showUnlocked);
-                window.playSound?.('click');
-              }}
-              onMouseEnter={() => window.playSound?.('hover')}
-            >
-              <span className={`w-4 h-4 border ${showUnlocked ? 'bg-cyber-green' : 'bg-transparent'} mr-2 flex items-center justify-center`}>
-                {showUnlocked && <span>✓</span>}
-              </span>
-              <span>Show Locked Achievements</span>
-            </button>
+        </div>
+
+        {/* Achievement Timeline */}
+        <div className="relative">
+          <div className="absolute left-1/2 h-full border border-dashed border-cyber-purple/50 transform -translate-x-1/2"></div>
+          <div className="space-y-8">
+            {visibleAchievements.map((achievement, index) => (
+              <div key={index} className="flex items-center">
+                {/* Dot and Line */}
+                <div className="relative w-1/2">
+                  <div className="absolute top-1/2 transform -translate-y-1/2 right-4">
+                    <div className="w-4 h-4 rounded-full bg-cyber-purple relative z-10">
+                      <div className="absolute -top-1 -left-1 w-6 h-6 rounded-full bg-cyber-dark border border-cyber-purple animate-ping"></div>
+                    </div>
+                  </div>
+                  {index > 0 && (
+                    <div className="absolute top-0 bottom-0 right-6 w-0.5 bg-cyber-purple/50"></div>
+                  )}
+                </div>
+
+                {/* Achievement Card */}
+                <div
+                  className={`w-1/2 cyber-panel p-4 ${achievement.isLocked ? 'opacity-50' : ''}`}
+                  style={{
+                    animationDelay: `${index * 0.15}s`,
+                    opacity: 1,
+                    transform: 'translateY(0)'
+                  }}
+                >
+                  <div className="flex items-start mb-2">
+                    <div className="mr-3 text-cyber-blue">
+                      {achievement.icon}
+                    </div>
+                    <div>
+                      <h3 className="font-futura text-cyber-light">{achievement.title}</h3>
+                      <div className="text-xs text-cyber-light/50">{achievement.category}</div>
+                    </div>
+                  </div>
+                  <p className="text-sm text-cyber-light/80 mb-2">{achievement.description}</p>
+                  <div className="text-xs text-cyber-blue">{formatDate(achievement.date)}</div>
+                  {achievement.isLocked && (
+                    <div className="absolute top-2 right-2">
+                      <LockIcon size={20} className="text-cyber-red" />
+                    </div>
+                  )}
+                </div>
+              </div>
+            ))}
           </div>
         </div>
 
-        {/* Achievements Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {achievements.map((achievement) => (
-            <div
-              key={achievement.id}
-              className={`cyber-panel relative overflow-hidden ${
-                achievement.unlocked 
-                  ? rarityColors[achievement.rarity] + ' ' + rarityGlow[achievement.rarity]
-                  : 'border-gray-700 bg-cyber-dark/30 filter grayscale-[70%]'
-              } transition-all duration-300`}
-              onClick={() => {
-                if (achievement.unlocked) {
-                  setShowingDetails(showingDetails === achievement.id ? null : achievement.id);
-                  window.playSound?.('click');
-                }
-              }}
-              onMouseEnter={() => window.playSound?.('hover')}
-            >
-              {!achievement.unlocked && (
-                <div className="absolute inset-0 bg-cyber-dark/70 flex items-center justify-center z-10">
-                  <div className="text-center p-4">
-                    <Lock size={24} className="mx-auto mb-2 text-cyber-red" />
-                    <p className="text-cyber-light/70">Achievement Locked</p>
-                  </div>
-                </div>
-              )}
-              
-              <div className="flex items-start">
-                <div className={`p-3 mr-4 ${
-                  rarityTextColors[achievement.rarity]
-                }`}>
-                  {achievement.icon}
-                </div>
-                
-                <div>
-                  <h3 className={`font-futura ${
-                    achievement.unlocked ? rarityTextColors[achievement.rarity] : 'text-gray-500'
-                  }`}>
-                    {achievement.title}
-                  </h3>
-                  
-                  <p className={`text-xs mt-1 ${
-                    achievement.unlocked ? 'text-cyber-light/70' : 'text-cyber-light/30'
-                  }`}>
-                    {achievement.description}
-                  </p>
-                </div>
-              </div>
-              
-              <div className="flex justify-between items-center mt-4 text-xs">
-                <span className={`uppercase ${
-                  achievement.unlocked ? 'text-cyber-light/50' : 'text-cyber-light/30'
-                }`}>
-                  {achievement.date}
-                </span>
-                
-                <span className={`uppercase ${
-                  rarityTextColors[achievement.rarity]
-                }`}>
-                  {achievement.rarity}
-                </span>
-              </div>
-              
-              {/* Expanded details panel */}
-              {showingDetails === achievement.id && achievement.unlocked && (
-                <div className="mt-4 pt-4 border-t border-cyber-purple/20 text-sm">
-                  <div className="flex justify-between">
-                    <button 
-                      className="text-cyber-blue flex items-center text-xs"
-                      onMouseEnter={() => window.playSound?.('hover')}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        window.playSound?.('click');
-                      }}
-                    >
-                      <span>VIEW DETAILS</span>
-                      <ExternalLink size={12} className="ml-1" />
-                    </button>
-                    
-                    <button 
-                      className="text-cyber-purple flex items-center text-xs"
-                      onMouseEnter={() => window.playSound?.('hover')}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setShowingDetails(null);
-                        window.playSound?.('click');
-                      }}
-                    >
-                      <span>CLOSE</span>
-                    </button>
-                  </div>
-                </div>
-              )}
-              
-              {/* Achievement glow effect */}
-              <div className={`absolute bottom-0 left-0 right-0 h-1 ${
-                achievement.unlocked 
-                  ? rarityTextColors[achievement.rarity] 
-                  : 'bg-gray-700'
-              } opacity-50`}></div>
-            </div>
-          ))}
-        </div>
-        
-        {/* Achievement Statistics */}
-        <div className="mt-12 cyber-panel">
-          <h2 className="text-xl font-futura font-bold mb-6 flex items-center">
-            <Star className="mr-2 text-cyber-green" size={24} />
-            <span>ACHIEVEMENT STATISTICS</span>
+        {/* Future Roadmap */}
+        <div className="mt-12 cyber-panel p-6">
+          <h2 className="text-xl font-futura font-bold mb-4 flex items-center">
+            <Shield className="mr-2 text-cyber-purple" size={20} />
+            <span>UPCOMING GOALS</span>
           </h2>
-          
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <div className="border border-cyber-green/30 bg-cyber-dark/40 p-4 text-center">
-              <div className="text-3xl font-bold text-cyber-green mb-1">9/10</div>
-              <div className="text-xs text-cyber-light/70">ACHIEVEMENTS UNLOCKED</div>
-            </div>
-            
-            <div className="border border-cyber-blue/30 bg-cyber-dark/40 p-4 text-center">
-              <div className="text-3xl font-bold text-cyber-blue mb-1">3</div>
-              <div className="text-xs text-cyber-light/70">CTF VICTORIES</div>
-            </div>
-            
-            <div className="border border-cyber-purple/30 bg-cyber-dark/40 p-4 text-center">
-              <div className="text-3xl font-bold text-cyber-purple mb-1">4</div>
-              <div className="text-xs text-cyber-light/70">CERTIFICATIONS</div>
-            </div>
-            
-            <div className="border border-cyber-red/30 bg-cyber-dark/40 p-4 text-center">
-              <div className="text-3xl font-bold text-cyber-red mb-1">2</div>
-              <div className="text-xs text-cyber-light/70">LEGENDARY ACHIEVEMENTS</div>
-            </div>
-          </div>
+          <p className="text-cyber-light/80">
+            Strategic objectives and milestones planned for future achievements in cybersecurity.
+          </p>
+          <ul className="list-disc list-inside mt-4 text-sm text-cyber-light/70">
+            <li>Pursue advanced certifications in cloud security and incident response.</li>
+            <li>Contribute to open-source security projects and research initiatives.</li>
+            <li>Speak at cybersecurity conferences and share expertise with the community.</li>
+            <li>Develop innovative security tools and methodologies to address emerging threats.</li>
+          </ul>
         </div>
       </div>
     </div>

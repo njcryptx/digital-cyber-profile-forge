@@ -33,8 +33,8 @@ const Navigation: React.FC<{ currentPath: string }> = ({ currentPath }) => {
         <div className="mb-8 p-4 hidden md:block">
           <h1 className="font-futura text-xl font-bold flex items-center">
             <Shield className="text-cyber-purple mr-2" size={24} />
-            <span className="text-cyber-purple">CYBER</span>
-            <span className="text-cyber-blue">PROFILE</span>
+            <span className="text-cyber-purple">NJ</span>
+            <span className="text-cyber-blue">CRYPTX</span>
           </h1>
         </div>
         
@@ -63,7 +63,7 @@ const Navigation: React.FC<{ currentPath: string }> = ({ currentPath }) => {
         </div>
         
         <div className="p-4 text-xs text-cyber-light/50 hidden md:block">
-          <p className="animate-text-flicker">SYSTEM v1.0.4</p>
+          <p className="animate-text-flicker">RED TEAM v2.0.4</p>
           <p>{new Date().toLocaleTimeString()}</p>
         </div>
       </div>

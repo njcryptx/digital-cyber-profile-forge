@@ -4,7 +4,7 @@ import { Shield, Terminal, Cpu, Zap } from 'lucide-react';
 
 const Home = () => {
   const [typedText, setTypedText] = useState('');
-  const fullText = "Cybersecurity Researcher | Ethical Hacker | Digital Defender";
+  const fullText = "Cybersecurity Researcher | Ethical Hacker | Red Team Specialist";
   const [stats, setStats] = useState({
     level: 0,
     xp: 0,
@@ -59,8 +59,7 @@ const Home = () => {
                 
                 <div className="text-center md:text-left">
                   <h1 className="text-3xl md:text-4xl font-futura font-bold mb-1 text-cyber-light">
-                    <span className="text-cyber-purple">SHADOW</span>
-                    <span className="text-cyber-blue">CRYPT</span>
+                    <span className="text-cyber-purple">NIRANJAN</span> <span className="text-cyber-blue">M SANIL</span>
                   </h1>
                   
                   <div className="mb-2">
@@ -71,13 +70,13 @@ const Home = () => {
                   
                   <div className="flex flex-wrap justify-center md:justify-start gap-2 my-3">
                     <span className="px-2 py-1 text-xs bg-cyber-purple/20 border border-cyber-purple/40 text-cyber-light">
-                      NETWORK SECURITY
+                      CODE NAME: NJCRYPTX
                     </span>
                     <span className="px-2 py-1 text-xs bg-cyber-blue/20 border border-cyber-blue/40 text-cyber-light">
                       PENETRATION TESTING
                     </span>
                     <span className="px-2 py-1 text-xs bg-cyber-green/20 border border-cyber-green/40 text-cyber-light">
-                      THREAT DETECTION
+                      RED TEAM OPERATIONS
                     </span>
                   </div>
                 </div>
@@ -85,8 +84,8 @@ const Home = () => {
               
               <div className="mt-6">
                 <p className="text-cyber-light/80 mb-4">
-                  Elite cybersecurity professional specializing in advanced threat detection, vulnerability assessment,
-                  and penetration testing. Experienced in protecting critical infrastructure from sophisticated cyber attacks.
+                  Elite cybersecurity professional specializing in red teaming, penetration testing, and vulnerability assessment.
+                  Experienced in identifying security weaknesses and helping organizations strengthen their defenses against sophisticated cyber threats.
                 </p>
                 
                 <div className="flex flex-wrap gap-4 mt-4">
@@ -200,10 +199,10 @@ const Home = () => {
                 <div className="absolute top-0 right-0 p-1 text-xs text-cyber-green bg-cyber-dark/70">
                   ACTIVE
                 </div>
-                <h3 className="text-cyber-blue font-futura">Critical Infrastructure Protection</h3>
+                <h3 className="text-cyber-blue font-futura">Advanced Penetration Testing</h3>
                 <p className="text-sm text-cyber-light/70 mt-2">
-                  Performing penetration tests on energy sector networks to identify and patch vulnerabilities
-                  before they can be exploited by malicious actors.
+                  Conducting comprehensive red team operations to identify vulnerabilities in enterprise security systems 
+                  before malicious actors can exploit them.
                 </p>
                 <div className="mt-2 text-xs text-cyber-purple">CLEARANCE LEVEL: TOP SECRET</div>
               </div>
