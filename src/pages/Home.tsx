@@ -51,7 +51,7 @@ const Home = () => {
                 <div className="w-32 h-32 rounded-full cyber-border mb-4 md:mb-0 md:mr-6 overflow-hidden relative scanner-effect">
                   <div className="absolute inset-0 bg-gradient-to-tr from-cyber-purple/30 to-cyber-blue/30"></div>
                   <img 
-                    src="/placeholder.svg" 
+                    src="/lovable-uploads/c9830031-2a9f-4929-ac9d-c53f870845fc.png" 
                     alt="Cyber Profile" 
                     className="w-full h-full object-cover"
                   />
