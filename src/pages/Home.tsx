@@ -1,6 +1,7 @@
-
 import React, { useState, useEffect } from 'react';
 import { Shield, Terminal, Cpu, Zap } from 'lucide-react';
+import GitHubProfile from '@/components/GitHubProfile';
+import LinkedInInfo from '@/components/LinkedInInfo';
 
 const Home = () => {
   const [typedText, setTypedText] = useState('');
@@ -184,6 +185,16 @@ const Home = () => {
               </div>
             </div>
           </div>
+        </div>
+        
+        {/* GitHub Profile */}
+        <div className="mb-8">
+          <GitHubProfile username="njcryptx" />
+        </div>
+        
+        {/* LinkedIn Info */}
+        <div className="mb-8">
+          <LinkedInInfo />
         </div>
         
         {/* Featured Content */}
