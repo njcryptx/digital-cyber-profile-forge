@@ -2,12 +2,9 @@
 import React, { useState } from 'react';
 import { Briefcase, GraduationCap, Award, MapPin, ExternalLink, Trophy, Star } from 'lucide-react';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
-// Since we can't directly fetch from LinkedIn API without authentication,
-// we'll hardcode the data based on your LinkedIn profile
 const LinkedInInfo = () => {
-  const [activeTab, setActiveTab] = useState<'experience' | 'education' | 'certifications' | 'achievements'>('experience');
-  
   const profile = {
     name: "Niranjan M Sanil",
     title: "Cybersecurity Researcher | Penetration Tester | Security Analyst",
@@ -92,8 +89,8 @@ const LinkedInInfo = () => {
       {
         id: 2,
         title: "Cybersecurity Hall of Fame",
-        date: "2022",
-        description: "Inducted into the regional Cybersecurity Hall of Fame for outstanding contributions to the field."
+        date: "2024",
+        description: "Inducted into Google VRP Cybersecurity Hall of Fame for discovering and reporting critical security vulnerabilities in Google's infrastructure. This recognition acknowledges elite security researchers who have made significant contributions to strengthening digital security systems."
       },
       {
         id: 3,
@@ -142,165 +139,162 @@ const LinkedInInfo = () => {
           </a>
         </div>
         
-        {/* Navigation tabs */}
-        <div className="flex border-b border-cyber-purple/30 mb-4">
-          <button 
-            className={`px-3 py-2 text-sm font-medium transition-colors ${activeTab === 'experience' ? 'text-cyber-purple border-b-2 border-cyber-purple' : 'text-cyber-light/60 hover:text-cyber-light'}`}
-            onClick={() => {
-              setActiveTab('experience');
-              window.playSound?.('click');
-            }}
-            onMouseEnter={() => window.playSound?.('hover')}
-          >
-            <Briefcase size={16} className="inline-block mr-1" />
-            Experience
-          </button>
-          <button 
-            className={`px-3 py-2 text-sm font-medium transition-colors ${activeTab === 'education' ? 'text-cyber-purple border-b-2 border-cyber-purple' : 'text-cyber-light/60 hover:text-cyber-light'}`}
-            onClick={() => {
-              setActiveTab('education');
-              window.playSound?.('click');
-            }}
-            onMouseEnter={() => window.playSound?.('hover')}
-          >
-            <GraduationCap size={16} className="inline-block mr-1" />
-            Education
-          </button>
-          <button 
-            className={`px-3 py-2 text-sm font-medium transition-colors ${activeTab === 'certifications' ? 'text-cyber-purple border-b-2 border-cyber-purple' : 'text-cyber-light/60 hover:text-cyber-light'}`}
-            onClick={() => {
-              setActiveTab('certifications');
-              window.playSound?.('click');
-            }}
-            onMouseEnter={() => window.playSound?.('hover')}
-          >
-            <Award size={16} className="inline-block mr-1" />
-            Certifications
-          </button>
-          <button 
-            className={`px-3 py-2 text-sm font-medium transition-colors ${activeTab === 'achievements' ? 'text-cyber-purple border-b-2 border-cyber-purple' : 'text-cyber-light/60 hover:text-cyber-light'}`}
-            onClick={() => {
-              setActiveTab('achievements');
-              window.playSound?.('click');
-            }}
-            onMouseEnter={() => window.playSound?.('hover')}
-          >
-            <Trophy size={16} className="inline-block mr-1" />
-            Achievements
-          </button>
-        </div>
-        
-        {/* Experience Tab Content */}
-        {activeTab === 'experience' && (
-          <div className="space-y-4">
-            <h3 className="text-lg font-futura font-bold mb-3 flex items-center">
-              <Briefcase size={18} className="mr-2 text-cyber-purple" />
-              <span>Professional Experience</span>
-            </h3>
+        {/* Using shadcn/ui Tabs component */}
+        <Tabs defaultValue="experience" className="w-full">
+          <TabsList className="w-full bg-cyber-dark/40 border-b border-cyber-purple/30">
+            <TabsTrigger 
+              value="experience" 
+              className="data-[state=active]:text-cyber-purple data-[state=active]:border-b-2 data-[state=active]:border-cyber-purple bg-transparent"
+              onMouseEnter={() => window.playSound?.('hover')}
+              onClick={() => window.playSound?.('click')}
+            >
+              <Briefcase size={16} className="inline-block mr-1" />
+              Experience
+            </TabsTrigger>
             
-            {profile.experience.map(exp => (
-              <div key={exp.id} className="border-l-2 border-cyber-purple/30 pl-4">
-                <h4 className="text-cyber-blue font-medium">{exp.role}</h4>
-                <div className="flex justify-between text-xs">
-                  <span className="text-cyber-light">{exp.company}</span>
-                  <span className="text-cyber-purple">{exp.period}</span>
-                </div>
-                <p className="text-cyber-light/60 text-xs mt-2">{exp.description}</p>
-              </div>
-            ))}
-          </div>
-        )}
-        
-        {/* Education Tab Content */}
-        {activeTab === 'education' && (
-          <div className="space-y-4">
-            <h3 className="text-lg font-futura font-bold mb-3 flex items-center">
-              <GraduationCap size={18} className="mr-2 text-cyber-purple" />
-              <span>Education</span>
-            </h3>
+            <TabsTrigger 
+              value="education" 
+              className="data-[state=active]:text-cyber-purple data-[state=active]:border-b-2 data-[state=active]:border-cyber-purple bg-transparent"
+              onMouseEnter={() => window.playSound?.('hover')}
+              onClick={() => window.playSound?.('click')}
+            >
+              <GraduationCap size={16} className="inline-block mr-1" />
+              Education
+            </TabsTrigger>
             
-            {profile.education.map(edu => (
-              <div key={edu.id} className="border-l-2 border-cyber-purple/30 pl-4 mb-6">
-                <h4 className="text-cyber-blue font-medium">{edu.degree}</h4>
-                <div className="flex justify-between text-xs">
-                  <span className="text-cyber-light">{edu.institution}</span>
-                  <span className="text-cyber-purple">{edu.period}</span>
-                </div>
-                <p className="text-cyber-light/60 text-xs mt-2">{edu.description}</p>
-                
-                {edu.achievements && edu.achievements.length > 0 && (
-                  <div className="mt-2">
-                    <h5 className="text-xs text-cyber-green font-medium mb-1">Key Achievements:</h5>
-                    <ul className="space-y-1">
-                      {edu.achievements.map((achievement, index) => (
-                        <li key={index} className="text-xs text-cyber-light/70 flex items-start">
-                          <span className="text-cyber-purple mr-2">▹</span>
-                          {achievement}
-                        </li>
-                      ))}
-                    </ul>
+            <TabsTrigger 
+              value="certifications" 
+              className="data-[state=active]:text-cyber-purple data-[state=active]:border-b-2 data-[state=active]:border-cyber-purple bg-transparent"
+              onMouseEnter={() => window.playSound?.('hover')}
+              onClick={() => window.playSound?.('click')}
+            >
+              <Award size={16} className="inline-block mr-1" />
+              Certifications
+            </TabsTrigger>
+            
+            <TabsTrigger 
+              value="achievements" 
+              className="data-[state=active]:text-cyber-purple data-[state=active]:border-b-2 data-[state=active]:border-cyber-purple bg-transparent"
+              onMouseEnter={() => window.playSound?.('hover')}
+              onClick={() => window.playSound?.('click')}
+            >
+              <Trophy size={16} className="inline-block mr-1" />
+              Achievements
+            </TabsTrigger>
+          </TabsList>
+          
+          {/* Experience Tab Content */}
+          <TabsContent value="experience" className="pt-4">
+            <div className="space-y-4">
+              <h3 className="text-lg font-futura font-bold mb-3 flex items-center">
+                <Briefcase size={18} className="mr-2 text-cyber-purple" />
+                <span>Professional Experience</span>
+              </h3>
+              
+              {profile.experience.map(exp => (
+                <div key={exp.id} className="border-l-2 border-cyber-purple/30 pl-4">
+                  <h4 className="text-cyber-blue font-medium">{exp.role}</h4>
+                  <div className="flex justify-between text-xs">
+                    <span className="text-cyber-light">{exp.company}</span>
+                    <span className="text-cyber-purple">{exp.period}</span>
                   </div>
-                )}
-              </div>
-            ))}
-          </div>
-        )}
-        
-        {/* Certifications Tab Content */}
-        {activeTab === 'certifications' && (
-          <div>
-            <h3 className="text-lg font-futura font-bold mb-3 flex items-center">
-              <Award size={18} className="mr-2 text-cyber-purple" />
-              <span>Certifications</span>
-            </h3>
-            
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              {profile.certifications.map(cert => (
-                <div 
-                  key={cert.id}
-                  className="border border-cyber-purple/30 bg-cyber-dark/40 p-3 hover:border-cyber-purple/60 transition-all duration-300"
-                >
-                  <div className="flex items-start">
-                    <Award size={16} className="text-cyber-green mr-2 mt-1 flex-shrink-0" />
-                    <div>
-                      <h4 className="text-cyber-blue text-sm">{cert.name}</h4>
-                      <div className="flex justify-between text-xs mt-1">
-                        <span className="text-cyber-light/70">{cert.issuer}</span>
-                        <span className="text-cyber-purple">{cert.date}</span>
+                  <p className="text-cyber-light/60 text-xs mt-2">{exp.description}</p>
+                </div>
+              ))}
+            </div>
+          </TabsContent>
+          
+          {/* Education Tab Content */}
+          <TabsContent value="education" className="pt-4">
+            <div className="space-y-4">
+              <h3 className="text-lg font-futura font-bold mb-3 flex items-center">
+                <GraduationCap size={18} className="mr-2 text-cyber-purple" />
+                <span>Education</span>
+              </h3>
+              
+              {profile.education.map(edu => (
+                <div key={edu.id} className="border-l-2 border-cyber-purple/30 pl-4 mb-6">
+                  <h4 className="text-cyber-blue font-medium">{edu.degree}</h4>
+                  <div className="flex justify-between text-xs">
+                    <span className="text-cyber-light">{edu.institution}</span>
+                    <span className="text-cyber-purple">{edu.period}</span>
+                  </div>
+                  <p className="text-cyber-light/60 text-xs mt-2">{edu.description}</p>
+                  
+                  {edu.achievements && edu.achievements.length > 0 && (
+                    <div className="mt-2">
+                      <h5 className="text-xs text-cyber-green font-medium mb-1">Key Achievements:</h5>
+                      <ul className="space-y-1">
+                        {edu.achievements.map((achievement, index) => (
+                          <li key={index} className="text-xs text-cyber-light/70 flex items-start">
+                            <span className="text-cyber-purple mr-2">▹</span>
+                            {achievement}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+          </TabsContent>
+          
+          {/* Certifications Tab Content */}
+          <TabsContent value="certifications" className="pt-4">
+            <div>
+              <h3 className="text-lg font-futura font-bold mb-3 flex items-center">
+                <Award size={18} className="mr-2 text-cyber-purple" />
+                <span>Certifications</span>
+              </h3>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {profile.certifications.map(cert => (
+                  <div 
+                    key={cert.id}
+                    className="border border-cyber-purple/30 bg-cyber-dark/40 p-3 hover:border-cyber-purple/60 transition-all duration-300"
+                  >
+                    <div className="flex items-start">
+                      <Award size={16} className="text-cyber-green mr-2 mt-1 flex-shrink-0" />
+                      <div>
+                        <h4 className="text-cyber-blue text-sm">{cert.name}</h4>
+                        <div className="flex justify-between text-xs mt-1">
+                          <span className="text-cyber-light/70">{cert.issuer}</span>
+                          <span className="text-cyber-purple">{cert.date}</span>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
-        )}
-        
-        {/* Achievements Tab Content */}
-        {activeTab === 'achievements' && (
-          <div>
-            <h3 className="text-lg font-futura font-bold mb-3 flex items-center">
-              <Trophy size={18} className="mr-2 text-cyber-purple" />
-              <span>Notable Achievements</span>
-            </h3>
-            
-            <div className="space-y-4">
-              {profile.achievements.map(achievement => (
-                <div 
-                  key={achievement.id}
-                  className="border-l-2 border-cyber-purple/30 pl-4"
-                >
-                  <div className="flex items-center">
-                    <Star size={16} className="text-cyber-green mr-2 flex-shrink-0" />
-                    <h4 className="text-cyber-blue font-medium">{achievement.title}</h4>
+          </TabsContent>
+          
+          {/* Achievements Tab Content */}
+          <TabsContent value="achievements" className="pt-4">
+            <div>
+              <h3 className="text-lg font-futura font-bold mb-3 flex items-center">
+                <Trophy size={18} className="mr-2 text-cyber-purple" />
+                <span>Notable Achievements</span>
+              </h3>
+              
+              <div className="space-y-4">
+                {profile.achievements.map(achievement => (
+                  <div 
+                    key={achievement.id}
+                    className="border-l-2 border-cyber-purple/30 pl-4"
+                  >
+                    <div className="flex items-center">
+                      <Star size={16} className="text-cyber-green mr-2 flex-shrink-0" />
+                      <h4 className="text-cyber-blue font-medium">{achievement.title}</h4>
+                    </div>
+                    <div className="text-xs text-cyber-purple mb-1">{achievement.date}</div>
+                    <p className="text-cyber-light/60 text-xs">{achievement.description}</p>
                   </div>
-                  <div className="text-xs text-cyber-purple mb-1">{achievement.date}</div>
-                  <p className="text-cyber-light/60 text-xs">{achievement.description}</p>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
-          </div>
-        )}
+          </TabsContent>
+        </Tabs>
       </div>
     </div>
   );
